@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: jfsoftware-test
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  app:
+    build:
+      context: ./microservice_conection_test  
+      dockerfile: Dockerfile  
+    container_name: fastapi-app
+    ports:
+      - "8000:80"  
+    volumes:
+      - ./microservice_conection_test:/app  
+    depends_on:
+      - mysql 
+    env_file:
+      - .env
+
+volumes:
+  mysql-data:
